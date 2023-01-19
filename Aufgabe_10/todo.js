@@ -53,6 +53,11 @@ export class ToDo extends EventTarget {
       this.dispatchEvent(new Event('loeschen'));
     });
 
+    checkboxElement.addEventListener('change', () => {
+      this.dispatchEvent(new Event('checked'));
+    });
+
+
     return listElement;
   }
 }

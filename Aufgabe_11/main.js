@@ -20,13 +20,7 @@ function updateToDoListOnScreen() {
   elementAnzahl.textContent = `${offeneToDos.length} ToDo's offen`;
 
   // Im Local Storage speichern
-  const todosObj = [];
-  for (const todo of todos) {
-    const todoObj = { titel: todo.titel, erledigt: todo.erledigt };
-    todosObj.push(todoObj);
-  }
-  const todosJson = JSON.stringify(todosObj);
-  localStorage.setItem('todos', todosJson);
+  localStorage.setItem('todos', JSON.stringify(todos, ['titel', 'erledigt']));
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
@@ -39,6 +33,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
       todo.addEventListener('loeschen', (e) => {
         const index = todos.indexOf(e.target);
         todos.splice(index, 1);
+        updateToDoListOnScreen();
+      });
+      todo.addEventListener('erledigt', (e) => {
         updateToDoListOnScreen();
       });
       todos.push(todo);
@@ -61,21 +58,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
         updateToDoListOnScreen();
       });
 
-      todo.addEventListener('checked', (e) => {
-        const index = todos.indexOf(e.target);
-        todos[index].erledigt = true;
+      todo.addEventListener('erledigt', (e) => {
         updateToDoListOnScreen();
       });
 
-      document
-      .getElementById('aufraeumen')
-        .addEventListener('click', (event) => {
-          todos = todos.filter((obj) => !obj.erledigt);
-          updateToDoListOnScreen();
-        });
-
-
       updateToDoListOnScreen();
     }
+  });
+  document.getElementById('aufraeumen').addEventListener('click', (event) => {
+    todos = todos.filter((obj) => !obj.erledigt);
+    updateToDoListOnScreen();
   });
 });
